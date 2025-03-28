@@ -1,0 +1,42 @@
+{
+  "name": "mcp-server",
+  "version": "1.0.0",
+  "description": "An MCP server implemented using TypeScript, @modelcontextprotocol/sdk, and the Tigris/S3 SDK.",
+  "main": "dist/index.js",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write 'src/**/*.{ts,tsx,json,md}'",
+    "test": "jest"
+  },
+  "keywords": [
+    "mcp",
+    "server",
+    "typescript",
+    "s3",
+    "tigris"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.777.0",
+    "@modelcontextprotocol/sdk": "^1.8.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.13.14",
+    "@typescript-eslint/eslint-plugin": "^8.28.0",
+    "@typescript-eslint/parser": "^8.28.0",
+    "eslint": "^9.23.0",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-prettier": "^5.2.5",
+    "jest": "^29.7.0",
+    "prettier": "^3.5.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  }
+}
