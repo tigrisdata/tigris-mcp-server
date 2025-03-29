@@ -18,9 +18,7 @@
     "s3",
     "tigris"
   ],
-  "bin": {
-    "mcp-server-github": "dist/index.js"
-  },
+  "bin": "dist/index.js",
   "files": [
     "dist",
     "README.md"
