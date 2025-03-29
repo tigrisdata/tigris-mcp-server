@@ -2,12 +2,14 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { registerBucketTools } from './tools/buckets.js';
 import { registerObjectTools } from './tools/objects.js';
+import pjson from './../package.json' with { type: 'json' };
 
 export async function main() {
-  // Create an MCP server
+  const { version } = pjson;
+
   const server = new McpServer({
     name: 'Tigris MCP Server',
-    version: '1.0.0',
+    version,
   });
 
   registerBucketTools(server);

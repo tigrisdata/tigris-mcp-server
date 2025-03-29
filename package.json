@@ -1,18 +1,16 @@
 {
-  "name": "mcp-server",
-  "version": "1.0.0",
-  "description": "An MCP server implemented using TypeScript, @modelcontextprotocol/sdk, and the Tigris/S3 SDK.",
+  "name": "@tigrisdata/tigris-mcp-server",
+  "version": "0.0.0-development",
+  "description": "MCP server for Tigris Data.",
   "main": "dist/index.js",
   "type": "module",
-  "private": true,
-  "scripts": {
-    "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "ts-node src/index.ts",
-    "lint": "eslint . --ext .ts",
-    "format": "prettier --write 'src/**/*.{ts,tsx,json,md}'",
-    "test": "jest"
+  "author": "Tigris Data",
+  "homepage": "https://tigrisdata.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tigrisdata/tigris-mcp-server.git"
   },
+  "license": "MIT",
   "keywords": [
     "mcp",
     "server",
@@ -20,8 +18,22 @@
     "s3",
     "tigris"
   ],
-  "author": "",
-  "license": "MIT",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write 'src/**/*.{ts,tsx,json,md}'",
+    "test": "jest",
+    "semantic-release": "semantic-release"
+  },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.777.0",
     "@modelcontextprotocol/sdk": "^1.8.0"
@@ -36,6 +48,7 @@
     "eslint-plugin-prettier": "^5.2.5",
     "jest": "^29.7.0",
     "prettier": "^3.5.3",
+    "semantic-release": "^24.2.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.2"
   }
