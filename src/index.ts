@@ -6,4 +6,6 @@ const [cmd] = process.argv.slice(2);
 
 if (cmd === 'run') {
   await main();
+} else {
+  process.exit(1);
 }
