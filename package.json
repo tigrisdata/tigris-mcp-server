@@ -18,6 +18,9 @@
     "s3",
     "tigris"
   ],
+  "bin": {
+    "mcp-server-github": "dist/index.js"
+  },
   "files": [
     "dist",
     "README.md"
@@ -26,10 +29,10 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && shx chmod +x dist/*.js",
     "start": "node dist/index.js",
     "dev": "ts-node src/index.ts",
-    "lint": "eslint . --ext .ts",
+    "lint": "eslint . --ext {.ts,.cjs}",
     "format": "prettier --write 'src/**/*.{ts,tsx,json,md}'",
     "test": "jest",
     "semantic-release": "semantic-release"
@@ -49,6 +52,7 @@
     "jest": "^29.7.0",
     "prettier": "^3.5.3",
     "semantic-release": "^24.2.3",
+    "shx": "^0.4.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.2"
   }
