@@ -18,7 +18,9 @@
     "s3",
     "tigris"
   ],
-  "bin": "dist/index.js",
+  "bin": {
+    "tigris-mcp-server": "dist/index.js"
+  },
   "files": [
     "dist",
     "README.md"
