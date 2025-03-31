@@ -1,7 +1,7 @@
 # Tigris MCP Server
 
 ## Using with Claude Desktop/Cursor AI
-Add the following to your `claude_desktop_config.json` for *Claude Desktop* or go to Cursor Settings/MCP and click on *Add new global MCP server* and following code:
+Add the following to your `claude_desktop_config.json` for **Claude Desktop** or go to Cursor Settings/MCP and click on **Add new global MCP server** and following code:
 
 ```
 {
@@ -18,3 +18,5 @@ Add the following to your `claude_desktop_config.json` for *Claude Desktop* or g
   }
 }
 ```
+
+You can get `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` from **[webconsole](https://console.tigris.dev/)**. Please refer to our **[Tigris Data documentation](https://www.tigrisdata.com/docs/get-started/)** for detailed overview on how to get these values.
