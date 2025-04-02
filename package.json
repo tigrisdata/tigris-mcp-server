@@ -32,7 +32,7 @@
     "build": "tsc && shx chmod +x dist/*.js",
     "start": "node dist/index.js",
     "dev": "ts-node src/index.ts",
-    "lint": "eslint . --ext {.ts,.cjs}",
+    "lint": "eslint . --ext .ts,.cjs",
     "format": "prettier --write 'src/**/*.{ts,tsx,json,md}'",
     "test": "jest",
     "semantic-release": "semantic-release"
