@@ -12,7 +12,7 @@ Add the following to your `claude_desktop_config.json` for **Claude Desktop** or
       "env": {
         "AWS_ACCESS_KEY_ID": "YOUR_AWS_ACCESS_KEY_ID",
         "AWS_SECRET_ACCESS_KEY": "YOUR_AWS_SECRET_ACCESS_KEY",
-        "TIGRIS_GLOBAL_ENDPOINT": "https://fly.storage.tigris.dev"
+        "AWS_ENDPOINT_URL_S3": "https://fly.storage.tigris.dev"
       }
     }
   }
@@ -20,3 +20,21 @@ Add the following to your `claude_desktop_config.json` for **Claude Desktop** or
 ```
 
 You can get `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` from **[webconsole](https://console.tigris.dev/)** by following these **[the steps](https://www.tigrisdata.com/docs/iam/create-access-key/)**. Please refer to our **[Tigris Data documentation](https://www.tigrisdata.com/docs/get-started/)** for detailed overview.
+
+Alternatively, you can use your existing **AWS Profiles** if you have AWS CLI installed and have your AWS credential configured. You can use the following configuration.
+
+```
+{
+  "mcpServers": {
+    "tigris-mcp-server": {
+      "command": "npx",
+      "args": ["-y", "@tigrisdata/tigris-mcp-server", "run"],
+      "env": {
+        "USER_AWS_PROFILES": "true",
+        "AWS_PROFILE": "default",
+        "AWS_ENDPOINT_URL_S3": "https://fly.storage.tigris.dev"
+      }
+    }
+  }
+}
+```
