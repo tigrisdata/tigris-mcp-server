@@ -47,14 +47,14 @@ export async function init() {
       {
         type: 'input',
         name: 'awsAccessKeyId',
-        message: 'Enter you AWS Access Key Id:',
+        message: 'Enter you AWS/Tigris Access Key Id:',
       },
     ]);
     const { awsSecretAccessKey } = await inquirer.prompt([
       {
         type: 'input',
         name: 'awsSecretAccessKey',
-        message: 'Enter AWS Secret Access Key:',
+        message: 'Enter AWS/Tigris Secret Access Key:',
       },
     ]);
     config['tigris-mcp-server'].env.AWS_ACCESS_KEY_ID = awsAccessKeyId;
@@ -65,7 +65,7 @@ export async function init() {
     {
       type: 'input',
       name: 'awsEndpointUrl',
-      message: 'Enter AWS_ENDPOINT_URL_S3:',
+      message: 'Enter AWS/Tigris S3 Endpoint:',
       default: 'https://fly.storage.tigris.dev',
     },
   ]);
