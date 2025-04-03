@@ -3,7 +3,7 @@ import { fromIni } from '@aws-sdk/credential-providers';
 
 export function createS3Client() {
   const {
-    USER_AWS_PROFILES = 'false',
+    USE_AWS_PROFILES = 'false',
     AWS_PROFILE = 'default',
     AWS_ACCESS_KEY_ID = '',
     AWS_SECRET_ACCESS_KEY = '',
@@ -12,12 +12,12 @@ export function createS3Client() {
 
   return new S3Client({
     credentials:
-      USER_AWS_PROFILES === 'true'
+      USE_AWS_PROFILES === 'true'
         ? fromIni({ profile: AWS_PROFILE })
         : {
-          accessKeyId: AWS_ACCESS_KEY_ID,
-          secretAccessKey: AWS_SECRET_ACCESS_KEY,
-        },
+            accessKeyId: AWS_ACCESS_KEY_ID,
+            secretAccessKey: AWS_SECRET_ACCESS_KEY,
+          },
     region: 'auto',
     endpoint: AWS_ENDPOINT_URL_S3,
   });
