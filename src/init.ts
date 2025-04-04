@@ -4,13 +4,25 @@ import os from 'os';
 import path from 'path';
 import { MCP_SERVER_CONFIG, MCP_SERVER_CONFIG_FILE } from './utils/types.js';
 
+const supportedApplications = ['Claude for Desktop', 'Cursor AI'];
+const supportedModes = ['npx', 'docker'];
+
 export async function init() {
+  const { application } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'application',
+      message: 'Select Application:',
+      choices: supportedApplications,
+    },
+  ]);
+
   const { mode } = await inquirer.prompt([
     {
       type: 'list',
       name: 'mode',
-      message: 'Select Application:',
-      choices: ['Claude', 'Cursor'],
+      message: 'Run via:',
+      choices: supportedModes,
     },
   ]);
 
@@ -23,13 +35,13 @@ export async function init() {
     },
   ]);
 
-  let config: MCP_SERVER_CONFIG = {
-    'tigris-mcp-server': {
-      command: 'npx',
-      args: ['-y', '@tigrisdata/tigris-mcp-server', 'run'],
-      env: {},
-    },
-  };
+  const command = mode === supportedModes[0] ? 'npx' : 'docker';
+  const args =
+    mode === supportedModes[0]
+      ? ['-y', '@tigrisdata/tigris-mcp-server', 'run'] // npx command
+      : ['run']; // docker command
+
+  let env: Record<string, string> = {};
 
   if (useAwsProfiles) {
     const { awsProfile } = await inquirer.prompt([
@@ -40,8 +52,8 @@ export async function init() {
         default: 'default',
       },
     ]);
-    config['tigris-mcp-server'].env.USE_AWS_PROFILES = 'true';
-    config['tigris-mcp-server'].env.AWS_PROFILE = awsProfile;
+    env.USE_AWS_PROFILES = 'true';
+    env.AWS_PROFILE = awsProfile;
   } else {
     const { awsAccessKeyId } = await inquirer.prompt([
       {
@@ -57,8 +69,8 @@ export async function init() {
         message: 'Enter AWS/Tigris Secret Access Key:',
       },
     ]);
-    config['tigris-mcp-server'].env.AWS_ACCESS_KEY_ID = awsAccessKeyId;
-    config['tigris-mcp-server'].env.AWS_SECRET_ACCESS_KEY = awsSecretAccessKey;
+    env.AWS_ACCESS_KEY_ID = awsAccessKeyId;
+    env.AWS_SECRET_ACCESS_KEY = awsSecretAccessKey;
   }
 
   const { awsEndpointUrl } = await inquirer.prompt([
@@ -69,11 +81,39 @@ export async function init() {
       default: 'https://fly.storage.tigris.dev',
     },
   ]);
-  config['tigris-mcp-server'].env.AWS_ENDPOINT_URL_S3 = awsEndpointUrl;
+  env.AWS_ENDPOINT_URL_S3 = awsEndpointUrl;
+
+  if (command === 'docker') {
+    Object.keys(env).forEach((key) => {
+      args.push(`-e ${key}`);
+    });
+
+    [
+      '--network',
+      'host',
+      '--name',
+      'tigris-mcp-server',
+      '-i',
+      '-v',
+      'tigris-mcp-server:/app/dist',
+      '--rm',
+      'tigris-mcp-server',
+    ].forEach((arg) => {
+      args.push(arg);
+    });
+  }
+
+  const config: MCP_SERVER_CONFIG = {
+    'tigris-mcp-server': {
+      command,
+      args,
+      env,
+    },
+  };
 
   // Determine the file path based on mode
   const filePath =
-    mode === 'Claude'
+    application === supportedApplications[0]
       ? path.join(
           os.homedir(),
           'Library',
@@ -103,5 +143,5 @@ export async function init() {
   };
   fs.writeFileSync(filePath, JSON.stringify(newConfig, null, 2));
   // eslint-disable-next-line no-console
-  console.log(`Configuration saved to for ${mode}`);
+  console.log(`Configuration saved to for ${application}`);
 }
