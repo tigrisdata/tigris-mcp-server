@@ -150,5 +150,5 @@ export async function init() {
   };
   fs.writeFileSync(filePath, JSON.stringify(newConfig, null, 2));
   // eslint-disable-next-line no-console
-  console.log(`Configuration saved to for ${application}`);
+  console.log(`Configuration saved to ${filePath} for ${application}`);
 }
