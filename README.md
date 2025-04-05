@@ -34,6 +34,8 @@ Add the following to your `claude_desktop_config.json` for **Claude Desktop** or
 
 `docker build -t tigris-mcp-server -f Dockerfile .`
 
+Please note that the server will only allow operations within `/User/CurrentUser/tigris-mcp-server. This allows for a secure sandboxing environment.
+
 ```json
 {
   "mcpServers": {

@@ -31,7 +31,7 @@ export async function init() {
       type: 'confirm',
       name: 'useAwsProfiles',
       message: 'Do you want to use AWS profiles?',
-      default: true,
+      default: false,
     },
   ]);
 
@@ -84,6 +84,11 @@ export async function init() {
   env.AWS_ENDPOINT_URL_S3 = awsEndpointUrl;
 
   if (command === 'docker') {
+    const mcpFolder = `${os.homedir()}/tigris-mcp-server`;
+    if (!fs.existsSync(mcpFolder)) {
+      fs.mkdirSync(mcpFolder);
+    }
+
     Object.keys(env).forEach((key) => {
       args.push(`-e ${key}`);
     });
@@ -97,6 +102,8 @@ export async function init() {
       '-v',
       'tigris-mcp-server:/app/dist',
       '--rm',
+      '--mount',
+      `type=bind,src=${mcpFolder},dst=${mcpFolder}`,
       'tigris-mcp-server',
     ].forEach((arg) => {
       args.push(arg);
@@ -115,12 +122,12 @@ export async function init() {
   const filePath =
     application === supportedApplications[0]
       ? path.join(
-          os.homedir(),
-          'Library',
-          'Application Support',
-          'Claude',
-          'claude_desktop_config.json',
-        )
+        os.homedir(),
+        'Library',
+        'Application Support',
+        'Claude',
+        'claude_desktop_config.json',
+      )
       : path.join(os.homedir(), '.cursor', 'mcp.json');
 
   let existingConfig: MCP_SERVER_CONFIG_FILE = {};
