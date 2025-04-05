@@ -90,14 +90,15 @@ export async function init() {
     }
 
     Object.keys(env).forEach((key) => {
-      args.push(`-e ${key}`);
+      args.push('-e');
+      args.push(key);
     });
 
     [
       '--network',
       'host',
       '--name',
-      'tigris-mcp-server',
+      `tigris-mcp-server-${application.replace(/\s+/g, '-').toLowerCase()}`,
       '-i',
       '-v',
       'tigris-mcp-server:/app/dist',
@@ -122,12 +123,12 @@ export async function init() {
   const filePath =
     application === supportedApplications[0]
       ? path.join(
-        os.homedir(),
-        'Library',
-        'Application Support',
-        'Claude',
-        'claude_desktop_config.json',
-      )
+          os.homedir(),
+          'Library',
+          'Application Support',
+          'Claude',
+          'claude_desktop_config.json',
+        )
       : path.join(os.homedir(), '.cursor', 'mcp.json');
 
   let existingConfig: MCP_SERVER_CONFIG_FILE = {};
