@@ -4,7 +4,7 @@ Tigris is a globally distributed S3-compatible object storage service that provi
 
 ## Installation
 
-Run `npx -y @tigrisdata/tigris-mcp-server init` in terminal and follow the instructions.
+Run `npx -y @tigrisdata/tigris-mcp-server init` in terminal and follow the instructions. Please note that you need Docker installed and running on your machine if you choose to run the server in Docker mode.
 
 ## Manual Configuration
 
@@ -30,10 +30,6 @@ Add the following to your `claude_desktop_config.json` for **Claude Desktop** or
 
 ### Via Docker
 
-#### Build Docker Image
-
-`docker build -t tigris-mcp-server -f Dockerfile .`
-
 Please note that the server will only allow operations within `/User/**CurrentUser**/tigris-mcp-server. This allows for a secure sandboxing environment.
 
 ```json
@@ -49,14 +45,14 @@ Please note that the server will only allow operations within `/User/**CurrentUs
         "--network",
         "host",
         "--name",
-        "tigris-mcp-server",
+        "tigris-mcp-server-claude-for-desktop", // tigris-mcp-server-cursor for Cursor AI
         "-i",
         "-v",
         "tigris-mcp-server:/app/dist",
         "--rm",
         "--mount",
-        "type=bind,src=/Users/**CurrentUser**/tigris-mcp-server,dst=/Users/**CurrentUser**/tigris-mcp-server",
-        "tigris-mcp-server"
+        "type=bind,src=/Users/CURRENT_USER/tigris-mcp-server,dst=/Users/CURRENT_USER/tigris-mcp-server",
+        "quay.io/tigrisdata/tigris-mcp-server:latest"
       ],
       "env": {
         "AWS_ACCESS_KEY_ID": "YOUR_AWS_ACCESS_KEY_ID",
@@ -101,14 +97,14 @@ or via docker
         "--network",
         "host",
         "--name",
-        "tigris-mcp-server",
+        "tigris-mcp-server-claude-for-desktop", // tigris-mcp-server-cursor for Cursor AI
         "-i",
         "-v",
         "tigris-mcp-server:/app/dist",
         "--rm",
         "--mount",
-        "type=bind,src=/Users/**CurrentUser**/tigris-mcp-server,dst=/Users/**CurrentUser**/tigris-mcp-server",
-        "tigris-mcp-server"
+        "type=bind,src=/Users/CURRENT_USER/tigris-mcp-server,dst=/Users/CURRENT_USER/tigris-mcp-server",
+        "quay.io/tigrisdata/tigris-mcp-server:latest"
       ],
       "env": {
         "USE_AWS_PROFILES": "true",

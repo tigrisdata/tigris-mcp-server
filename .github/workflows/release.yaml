@@ -11,19 +11,76 @@ permissions:
   issues: write
   pull-requests: write
 
+env:
+  IMAGE_NAME: quay.io/tigrisdata/tigris-mcp-server
+
 jobs:
   release:
     runs-on: ubuntu-latest
+
     steps:
+      # Checkout code with full history to get tags
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Set up Node.js
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: "22"
+
+      # Install dependencies and build Node.js project
       - run: npm ci
       - run: npm run build
       - run: npm audit signatures
+
+      # Get latest git tag (if exists)
+      - name: Get git tag
+        id: get_tag
+        run: |
+          TAG=$(git describe --tags --abbrev=0 || echo "no-tag")
+          echo "TAG=$TAG" >> $GITHUB_ENV
+
+      # Release to GitHub and NPM
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm run semantic-release
+
+      # Set up QEMU for multi-arch builds
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      # Set up Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          install: true
+          driver-opts: network=host
+
+      # Create and bootstrap Buildx builder
+      - name: Create builder
+        run: |
+          docker buildx create --name mybuilder --use
+          docker buildx inspect --bootstrap
+
+      # Log in to Quay.io
+      - name: Log in to Quay.io
+        uses: docker/login-action@v3
+        with:
+          registry: quay.io
+          username: ${{ secrets.QUAY_REGISTRY_USER }}
+          password: ${{ secrets.QUAY_REGISTRY_PASSWORD }}
+
+      # Build and push multi-arch Docker image
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ${{ env.IMAGE_NAME }}:latest
+            ${{ env.IMAGE_NAME }}:${{ env.TAG }}
+          provenance: false
