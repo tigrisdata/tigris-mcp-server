@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+import { spawnSync } from 'child_process';
 import fs from 'fs';
 import inquirer from 'inquirer';
 import os from 'os';
@@ -6,6 +8,7 @@ import { MCP_SERVER_CONFIG, MCP_SERVER_CONFIG_FILE } from './utils/types.js';
 
 const supportedApplications = ['Claude for Desktop', 'Cursor AI'];
 const supportedModes = ['npx', 'docker'];
+const tigrisMcpServerImage = 'quay.io/tigrisdata/tigris-mcp-server:latest';
 
 export async function init() {
   const { application } = await inquirer.prompt([
@@ -84,6 +87,23 @@ export async function init() {
   env.AWS_ENDPOINT_URL_S3 = awsEndpointUrl;
 
   if (command === 'docker') {
+    console.log(
+      'Pulling the Tigris MCP Server Docker image. This may take a few minutes...\n',
+    );
+    const downloadImage = spawnSync(
+      'docker',
+      ['image', 'pull', tigrisMcpServerImage],
+      { encoding: 'utf-8' },
+    );
+
+    if (downloadImage.error) {
+      console.error(`Error pulling image: ${downloadImage.error.message}`);
+    } else if (downloadImage.stderr) {
+      console.error(`stderr: ${downloadImage.stderr}`);
+    } else {
+      console.log(`stdout: ${downloadImage.stdout}`);
+    }
+
     const mcpFolder = `${os.homedir()}/tigris-mcp-server`;
     if (!fs.existsSync(mcpFolder)) {
       fs.mkdirSync(mcpFolder);
@@ -105,7 +125,7 @@ export async function init() {
       '--rm',
       '--mount',
       `type=bind,src=${mcpFolder},dst=${mcpFolder}`,
-      'tigris-mcp-server',
+      'quay.io/tigrisdata/tigris-mcp-server:latest',
     ].forEach((arg) => {
       args.push(arg);
     });
@@ -137,7 +157,6 @@ export async function init() {
     try {
       existingConfig = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.warn(
         `Warning: Could not parse existing config file at ${filePath}, using an empty config.`,
         { error },
@@ -150,6 +169,5 @@ export async function init() {
     mcpServers: { ...existingConfig.mcpServers, ...config },
   };
   fs.writeFileSync(filePath, JSON.stringify(newConfig, null, 2));
-  // eslint-disable-next-line no-console
   console.log(`Configuration saved to ${filePath} for ${application}`);
 }
