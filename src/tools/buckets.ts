@@ -26,6 +26,10 @@ const TIGRIS_CREATE_BUCKET_TOOL: Tool = {
         type: 'string',
         description: 'Name of the bucket to create',
       },
+      isPublic: {
+        type: 'boolean',
+        description: 'Set your bucket as public or private',
+      },
     },
     required: ['bucketName'],
   },
@@ -66,9 +70,12 @@ export const BUCKET_TOOLS_HANDLER: ToolHandlers = {
     };
   },
   [TIGRIS_CREATE_BUCKET_TOOL.name]: async (request) => {
-    const { bucketName } = request.params.arguments as { bucketName: string };
+    const { bucketName, isPublic } = request.params.arguments as {
+      bucketName: string;
+      isPublic: boolean;
+    };
 
-    await createBucket(bucketName);
+    await createBucket(bucketName, isPublic);
     return {
       content: [
         {
@@ -105,9 +112,14 @@ const listBuckets = async () => {
   return buckets;
 };
 
-const createBucket = async (bucketName: string) => {
+const createBucket = async (bucketName: string, isPublic: boolean = false) => {
   const S3 = createS3Client();
-  return S3.send(new CreateBucketCommand({ Bucket: bucketName }));
+  return S3.send(
+    new CreateBucketCommand({
+      Bucket: bucketName,
+      ACL: isPublic ? 'public-read' : 'private',
+    }),
+  );
 };
 
 const deleteBucket = async (bucketName: string) => {
