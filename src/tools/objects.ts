@@ -4,6 +4,7 @@ import {
   paginateListObjectsV2,
   PutObjectCommand,
 } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { readFile } from 'node:fs/promises';
 import { createS3Client } from '../utils/create-s3-client.js';
@@ -112,12 +113,36 @@ const TIGRIS_DELETE_OBJECT_TOOL: Tool = {
   },
 };
 
+const TIGRIS_GET_SIGNED_OBJECT_URL_TOOL: Tool = {
+  name: 'tigris_get_signed_url_object',
+  description: 'Get an signed url of an object from a bucket',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      bucketName: {
+        type: 'string',
+        description: 'Name of the bucket',
+      },
+      key: {
+        type: 'string',
+        description: 'Key of the object to get signed url',
+      },
+      expiresIn: {
+        type: 'number',
+        description: 'Expiration time in seconds',
+      },
+    },
+    required: ['bucketName', 'key'],
+  },
+};
+
 export const TIGRIS_OBJECT_TOOLS: Array<Tool> = [
   TIGRIS_LIST_OBJECTS_TOOL,
   TIGRIS_PUT_OBJECT_TOOL,
   TIGRIS_PUT_OBJECT_FROM_PATH_TOOL,
   TIGRIS_GET_OBJECT_TOOL,
   TIGRIS_DELETE_OBJECT_TOOL,
+  TIGRIS_GET_SIGNED_OBJECT_URL_TOOL,
 ];
 
 export const OBJECT_TOOLS_HANDLER: ToolHandlers = {
@@ -207,6 +232,24 @@ export const OBJECT_TOOLS_HANDLER: ToolHandlers = {
       ],
     };
   },
+  [TIGRIS_GET_SIGNED_OBJECT_URL_TOOL.name]: async (request) => {
+    const { bucketName, key, expiresIn } = request.params.arguments as {
+      bucketName: string;
+      key: string;
+      expiresIn: number;
+    };
+
+    const object = await getSignedUrlForObject(bucketName, key, expiresIn);
+
+    return {
+      content: [
+        {
+          type: 'text',
+          text: JSON.stringify(object),
+        },
+      ],
+    };
+  },
 };
 
 const listObjects = async (bucketName: string) => {
@@ -286,4 +329,23 @@ const deleteObject = async (bucketName: string, fileName: string) => {
 
   const response = await S3.send(command);
   return response;
+};
+
+const getSignedUrlForObject = async (
+  bucketName: string,
+  fileName: string,
+  expiresIn: number = 3600,
+) => {
+  const S3 = createS3Client();
+
+  return await getSignedUrl(
+    S3,
+    new GetObjectCommand({
+      Bucket: bucketName,
+      Key: fileName,
+    }),
+    {
+      expiresIn,
+    },
+  );
 };
