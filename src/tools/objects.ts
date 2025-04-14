@@ -8,6 +8,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { readFile } from 'node:fs/promises';
 import { createS3Client } from '../utils/create-s3-client.js';
+import { isBucketPublic } from '../utils/get-bucket-acls.js';
 import { ToolHandlers } from '../utils/types.js';
 
 const TIGRIS_LIST_OBJECTS_TOOL: Tool = {
@@ -136,6 +137,33 @@ const TIGRIS_GET_SIGNED_OBJECT_URL_TOOL: Tool = {
   },
 };
 
+const TIGRIS_UPLOAD_FILE_AND_GET_URL_TOOL: Tool = {
+  name: 'tigris_upload_file_and_get_url',
+  description: 'Upload a file and get a public url for it',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      bucketName: {
+        type: 'string',
+        description: 'Name of the bucket',
+      },
+      key: {
+        type: 'string',
+        description: 'Key of the object to upload',
+      },
+      path: {
+        type: 'string',
+        description: 'Absolute path to the file to upload',
+      },
+      expiresIn: {
+        type: 'number',
+        description: 'Expiration time in seconds',
+      },
+    },
+    required: ['bucketName', 'key', 'path', 'expiresIn'],
+  },
+};
+
 export const TIGRIS_OBJECT_TOOLS: Array<Tool> = [
   TIGRIS_LIST_OBJECTS_TOOL,
   TIGRIS_PUT_OBJECT_TOOL,
@@ -143,6 +171,7 @@ export const TIGRIS_OBJECT_TOOLS: Array<Tool> = [
   TIGRIS_GET_OBJECT_TOOL,
   TIGRIS_DELETE_OBJECT_TOOL,
   TIGRIS_GET_SIGNED_OBJECT_URL_TOOL,
+  TIGRIS_UPLOAD_FILE_AND_GET_URL_TOOL,
 ];
 
 export const OBJECT_TOOLS_HANDLER: ToolHandlers = {
@@ -250,6 +279,34 @@ export const OBJECT_TOOLS_HANDLER: ToolHandlers = {
       ],
     };
   },
+  [TIGRIS_UPLOAD_FILE_AND_GET_URL_TOOL.name]: async (request) => {
+    const {bucketName, key, path, expiresIn} = request.params.arguments as {
+      bucketName: string;
+      key: string;
+      path: string;
+      expiresIn: number;
+    };
+
+    await putObjectFromFS(bucketName, key, path);
+
+    const S3 = createS3Client();
+    let url = '';
+
+    if (await isBucketPublic(S3, bucketName)) {
+      url = `https://${bucketName}.fly.storage.tigris.dev/${key}`;
+    } else {
+      url = await getSignedUrlForObject(bucketName, key, expiresIn);
+    }
+
+    return {
+      content: [
+        {
+          type: 'text',
+          text: `Your output MUST contain this URL: ${url}`,
+        },
+      ],
+    };
+  },
 };
 
 const listObjects = async (bucketName: string) => {
@@ -343,6 +400,7 @@ const getSignedUrlForObject = async (
     new GetObjectCommand({
       Bucket: bucketName,
       Key: fileName,
+      ResponseContentDisposition: "inline",
     }),
     {
       expiresIn,
