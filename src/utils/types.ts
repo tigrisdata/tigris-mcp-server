@@ -4,9 +4,11 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 import { z } from 'zod';
 
+export type ToolRequest = z.infer<typeof CallToolRequestSchema>;
+
 export type ToolHandlers = Record<
   string,
-  (request: z.infer<typeof CallToolRequestSchema>) => Promise<Result>
+  (request: ToolRequest) => Promise<Result>
 >;
 
 export type MCP_SERVER_CONFIG = Record<
