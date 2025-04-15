@@ -1,12 +1,10 @@
 import {
   CreateBucketCommand,
   DeleteBucketCommand,
-  ListBucketsCommand,
   paginateListBuckets,
 } from '@aws-sdk/client-s3';
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { createS3Client } from '../utils/create-s3-client.js';
-import { isBucketPublic } from '../utils/get-bucket-acls.js';
 import { ToolHandlers } from '../utils/types.js';
 
 const TIGRIS_LIST_BUCKETS_TOOL: Tool = {
@@ -109,14 +107,7 @@ const listBuckets = async () => {
       buckets.push(...page.Buckets);
     }
   }
-
-  return Promise.all(
-    buckets.map(async (bucket) => ({
-      name: bucket.Name,
-      createdAt: bucket.CreationDate,
-      isPublic: await isBucketPublic(S3, bucket.Name as string),
-    }))
-  );
+  return buckets;
 };
 
 const createBucket = async (bucketName: string, isPublic: boolean = false) => {

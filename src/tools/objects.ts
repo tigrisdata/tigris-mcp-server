@@ -8,7 +8,6 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { readFile } from 'node:fs/promises';
 import { createS3Client } from '../utils/create-s3-client.js';
-import { isBucketPublic } from '../utils/get-bucket-acls.js';
 import { ToolHandlers } from '../utils/types.js';
 
 const TIGRIS_LIST_OBJECTS_TOOL: Tool = {
@@ -280,7 +279,7 @@ export const OBJECT_TOOLS_HANDLER: ToolHandlers = {
     };
   },
   [TIGRIS_UPLOAD_FILE_AND_GET_URL_TOOL.name]: async (request) => {
-    const {bucketName, key, path, expiresIn} = request.params.arguments as {
+    const { bucketName, key, path, expiresIn } = request.params.arguments as {
       bucketName: string;
       key: string;
       path: string;
@@ -289,14 +288,7 @@ export const OBJECT_TOOLS_HANDLER: ToolHandlers = {
 
     await putObjectFromFS(bucketName, key, path);
 
-    const S3 = createS3Client();
-    let url = '';
-
-    if (await isBucketPublic(S3, bucketName)) {
-      url = `https://${bucketName}.fly.storage.tigris.dev/${key}`;
-    } else {
-      url = await getSignedUrlForObject(bucketName, key, expiresIn);
-    }
+    const url = await getSignedUrlForObject(bucketName, key, expiresIn);
 
     return {
       content: [
@@ -400,7 +392,7 @@ const getSignedUrlForObject = async (
     new GetObjectCommand({
       Bucket: bucketName,
       Key: fileName,
-      ResponseContentDisposition: "inline",
+      ResponseContentDisposition: 'inline',
     }),
     {
       expiresIn,
