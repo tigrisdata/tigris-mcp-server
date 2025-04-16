@@ -8,6 +8,7 @@ export function createS3Client() {
     AWS_ACCESS_KEY_ID = '',
     AWS_SECRET_ACCESS_KEY = '',
     AWS_ENDPOINT_URL_S3,
+    AWS_REGION = 'auto',
   } = process.env;
 
   return new S3Client({
@@ -18,7 +19,7 @@ export function createS3Client() {
             accessKeyId: AWS_ACCESS_KEY_ID,
             secretAccessKey: AWS_SECRET_ACCESS_KEY,
           },
-    region: 'auto',
+    region: AWS_REGION,
     endpoint: AWS_ENDPOINT_URL_S3,
   });
 }

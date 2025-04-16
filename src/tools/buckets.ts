@@ -58,13 +58,11 @@ export const TIGRIS_BUCKET_TOOLS: Array<Tool> = [
 
 export const BUCKET_TOOLS_HANDLER: ToolHandlers = {
   [TIGRIS_LIST_BUCKETS_TOOL.name]: async () => {
-    const result = await listBuckets();
-
     return {
       content: [
         {
           type: 'text',
-          text: JSON.stringify(result),
+          text: JSON.stringify(await listBuckets()),
         },
       ],
     };
