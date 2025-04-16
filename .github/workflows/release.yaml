@@ -34,19 +34,19 @@ jobs:
       - run: npm run build
       - run: npm audit signatures
 
-      # Get latest git tag (if exists)
-      - name: Get git tag
-        id: get_tag
-        run: |
-          TAG=$(git describe --tags --abbrev=0 || echo "no-tag")
-          echo "TAG=$TAG" >> $GITHUB_ENV
-
       # Release to GitHub and NPM
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm run semantic-release
+
+      # Get latest git tag (if exists)
+      - name: Get git tag
+        id: get_tag
+        run: |
+          TAG=$(git describe --tags --abbrev=0 || echo "no-tag")
+          echo "TAG=$TAG" >> $GITHUB_ENV
 
       # Set up QEMU for multi-arch builds
       - name: Set up QEMU
