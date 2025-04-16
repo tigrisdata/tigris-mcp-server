@@ -120,8 +120,6 @@ export async function init() {
       '--name',
       `tigris-mcp-server-${application.replace(/\s+/g, '-').toLowerCase()}`,
       '-i',
-      '-v',
-      'tigris-mcp-server:/app/dist',
       '--rm',
       '--mount',
       `type=bind,src=${mcpFolder},dst=${mcpFolder}`,

@@ -49,8 +49,6 @@ Please note that the server will only allow operations within `/User/**CurrentUs
         "--name",
         "tigris-mcp-server-claude-for-desktop", // tigris-mcp-server-cursor for Cursor AI
         "-i",
-        "-v",
-        "tigris-mcp-server:/app/dist",
         "--rm",
         "--mount",
         "type=bind,src=/Users/CURRENT_USER/tigris-mcp-server,dst=/Users/CURRENT_USER/tigris-mcp-server",
@@ -104,8 +102,6 @@ or via docker
         "--name",
         "tigris-mcp-server-claude-for-desktop", // tigris-mcp-server-cursor for Cursor AI
         "-i",
-        "-v",
-        "tigris-mcp-server:/app/dist",
         "--rm",
         "--mount",
         "type=bind,src=/Users/CURRENT_USER/tigris-mcp-server,dst=/Users/CURRENT_USER/tigris-mcp-server",
@@ -120,3 +116,5 @@ or via docker
   }
 }
 ```
+
+For development, refer to the [CONTRIBUTING.md](CONTRIBUTING.md) file.

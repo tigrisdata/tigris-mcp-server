@@ -1,7 +1,7 @@
 FROM node:20-alpine
 
 # Set working directory
-WORKDIR /app
+WORKDIR /mcp-server
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
@@ -12,7 +12,6 @@ RUN npm ci --only=production
 
 # Copy only the necessary files
 COPY src ./src
-COPY dist ./dist
 COPY node_modules ./node_modules
 
 # Build the TypeScript project
