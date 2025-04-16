@@ -8,7 +8,7 @@ export const getBucketAcl = async (S3: S3Client, bucketName: string) => {
 export const isBucketPublic = async (S3: S3Client, bucketName: string) => {
   const acl = await getBucketAcl(S3, bucketName);
   return acl.Grants?.some(
-    grant =>
+    (grant) =>
       grant.Grantee?.Type === 'Group' &&
       grant.Grantee?.URI === 'http://acs.amazonaws.com/groups/global/AllUsers',
   );
