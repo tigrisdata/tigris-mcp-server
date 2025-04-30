@@ -33,9 +33,8 @@ As Tigris supports the S3 API, you can use the wide range of available S3 tools,
 
 Tigris MCP server can be used both with `npx` and `docker`. We recommend [running with `docker`](https://www.tigrisdata.com/blog/mcp-server/#trust) as it provides better sandboxing.
 
-- Running Tigris MCP server with `docker` requires Docker Engine to be installed. If you don't have it installed, follow the instructions [here](https://docs.docker.com/engine/install/)
-
-- Running Tigris MCP server with `npx` requires Node.js to be installed. If you don't have it installed, follow the instructions [here](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
+- Running the Tigris MCP server with `docker` requires the Docker Engine to be installed. If you don't have it installed, follow the instructions [here](https://docs.docker.com/engine/install/).
+- Running the Tigris MCP server with `npx` requires Node.js to be installed. If you don't have it installed, follow the instructions [here](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
 
 ### ⚙️ Installation
 
