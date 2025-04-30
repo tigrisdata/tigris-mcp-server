@@ -1,12 +1,14 @@
 # 🦁 Tigris MCP Server
 
-**Tigris** is a globally distributed S3-compatible object storage service that provides low latency anywhere in the world, enabling developers to store and access any amount of data for a wide range of use cases.
+Tigris is a high-performance, S3-compatible object storage system designed for multi-cloud and AI workloads. We move your data all around the world based on where it's needed so that downloads are fast and the data is close to your users. You can store anything you want on Tigris (AI models, training data, database backups, request logs, social media uploads, or anything else) with no egress fees.
 
 The **Tigris MCP Server** implements the [MCP specification](https://modelcontextprotocol.io/) to create a seamless connection between AI agents and Tigris key features like bucket and object management.
 
 ## 🎯 Features
 
-Tigris MCP server provides your agents context to your Tigris buckets and objects. That allows you to use Tigris in your AI editor workflows. Here are some of the prompts you can try,
+The Tigris MCP server provides your agents context to your Tigris buckets and objects. That allows you to use Tigris in your AI editor workflows.
+
+Here are some example prompts you can try:
 
 #### 📦 Buckets
 
@@ -29,9 +31,22 @@ Checkout our blog post about [Vibe coding](https://www.tigrisdata.com/blog/vibes
 
 As Tigris supports the S3 API, you can use the wide range of available S3 tools, libraries, and extensions. You can get `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` from [webconsole](https://console.tigris.dev/) by following these [the steps](https://www.tigrisdata.com/docs/iam/create-access-key/). Please refer to our [Tigris Data documentation](https://www.tigrisdata.com/docs/get-started/) for detailed overview.
 
+To get started:
+
+* Sign up for an account at [storage.new](https://storage.new).
+* Get an access key at [storage.new/accesskey](https://storage.new/accesskey).
+* Copy the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to a safe place like your password manager. These will not be shown again.
+
 ### ⚒️ Requirements
 
 Tigris MCP server can be used both with `npx` and `docker`. We recommend [running with `docker`](https://www.tigrisdata.com/blog/mcp-server/#trust) as it provides better sandboxing.
+
+We support installing the Tigris MCP server two ways:
+
+1. [🐳 Docker](https://www.docker.com/)
+1. [📦 NPX](https://docs.npmjs.com/cli/v8/commands/npx)
+
+We ]suggest installing and using the MCP server with Docker](https://www.tigrisdata.com/blog/mcp-server/#trust) as it provides much better sandboxing than NPX.
 
 - Running the Tigris MCP server with `docker` requires the Docker Engine to be installed. If you don't have it installed, follow the instructions [here](https://docs.docker.com/engine/install/).
 - Running the Tigris MCP server with `npx` requires Node.js to be installed. If you don't have it installed, follow the instructions [here](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
@@ -46,13 +61,13 @@ Click one of these buttons to install the Tigris MCP Server for VS Code or VS Co
 
 #### 📦 Claude Desktop and Cursor AI
 
-Tigris MCP Server can be installed for Claude Desktop and Cursor AI using installation script. You can run following command in terminal and follow the instructions.
+You can install the Tigris MCP server in [Claude Desktop](https://claude.ai/download) and [Cursor](https://www.cursor.com/) by running our install script:
 
 ```
 npx -y @tigrisdata/tigris-mcp-server init
 ```
 
-#### 🪏 Manual Configuration
+#### 🪏 Manual Installation
 
 Add the following to your `claude_desktop_config.json` for **Claude Desktop** or go to Cursor Settings/MCP and click on **Add new global MCP server** and following code:
 
