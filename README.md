@@ -69,9 +69,29 @@ npx -y @tigrisdata/tigris-mcp-server init
 
 #### 🪏 Manual Installation
 
-Add the following to your `claude_desktop_config.json` for **Claude Desktop** or go to Cursor Settings/MCP and click on **Add new global MCP server** and following code:
+If you don't want to use our automatic install script, you can manually install the Tigris MCP server by adding one of these blocks to your MCP client's configuration.
 
-##### Via NPX
+For Claude Desktop, edit one of the following files:
+
+* 🍎 macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+* 🪟 Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+
+To open the right file in Cursor:
+
+* 🍎 macOS:
+  * Open the Cursor menu in the upper-left hand corner of your screen
+  * Go to Settings -> Cursor Settings
+  * Click on the MCP tab
+  * Click "Add new global MCP server"
+* 🪟 Windows:
+  * Open the File menu
+  * Go to Preferences -> Cursor Settings
+  * Click on the MCP tab
+  * Click "Add new global MCP server"
+  
+Then add one of the following blocks to the end of your configuration:
+
+##### 📦 Via NPX
 
 ```json
 {
@@ -89,7 +109,7 @@ Add the following to your `claude_desktop_config.json` for **Claude Desktop** or
 }
 ```
 
-##### Via Docker
+##### 🐳 Via Docker
 
 Please note that the server will only allow operations within `/User/**CurrentUser**/tigris-mcp-server. This allows for a secure sandboxing environment.
 
