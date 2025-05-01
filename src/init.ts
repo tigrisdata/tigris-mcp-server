@@ -115,10 +115,6 @@ export async function init() {
     });
 
     [
-      '--network',
-      'host',
-      '--name',
-      `tigris-mcp-server-${application.replace(/\s+/g, '-').toLowerCase()}`,
       '-i',
       '--rm',
       '--mount',

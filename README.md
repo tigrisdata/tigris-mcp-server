@@ -33,9 +33,9 @@ As Tigris supports the S3 API, you can use the wide range of available S3 tools,
 
 To get started:
 
-* Sign up for an account at [storage.new](https://storage.new).
-* Get an access key at [storage.new/accesskey](https://storage.new/accesskey).
-* Copy the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to a safe place like your password manager. These will not be shown again.
+- Sign up for an account at [storage.new](https://storage.new).
+- Get an access key at [storage.new/accesskey](https://storage.new/accesskey).
+- Copy the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to a safe place like your password manager. These will not be shown again.
 
 ### ⚒️ Requirements
 
@@ -73,22 +73,22 @@ If you don't want to use our automatic install script, you can manually install 
 
 For Claude Desktop, edit one of the following files:
 
-* 🍎 macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-* 🪟 Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+- 🍎 macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- 🪟 Windows: `%APPDATA%\Claude\claude_desktop_config.json`
 
 To open the right file in Cursor:
 
-* 🍎 macOS:
-  * Open the Cursor menu in the upper-left hand corner of your screen
-  * Go to Settings -> Cursor Settings
-  * Click on the MCP tab
-  * Click "Add new global MCP server"
-* 🪟 Windows:
-  * Open the File menu
-  * Go to Preferences -> Cursor Settings
-  * Click on the MCP tab
-  * Click "Add new global MCP server"
-  
+- 🍎 macOS:
+  - Open the Cursor menu in the upper-left hand corner of your screen
+  - Go to Settings -> Cursor Settings
+  - Click on the MCP tab
+  - Click "Add new global MCP server"
+- 🪟 Windows:
+  - Open the File menu
+  - Go to Preferences -> Cursor Settings
+  - Click on the MCP tab
+  - Click "Add new global MCP server"
+
 Then add one of the following blocks to the end of your configuration:
 
 ##### 📦 Via NPX
@@ -111,7 +111,7 @@ Then add one of the following blocks to the end of your configuration:
 
 ##### 🐳 Via Docker
 
-Please note that the server will only allow operations within `/User/**CurrentUser**/tigris-mcp-server. This allows for a secure sandboxing environment.
+Please note that the server will only allow operations within `/User/**CURRENT_USER**/tigris-mcp-server. This allows for a secure sandboxing environment.
 
 ```json
 {
@@ -125,10 +125,6 @@ Please note that the server will only allow operations within `/User/**CurrentUs
         "AWS_SECRET_ACCESS_KEY",
         "-e",
         "AWS_ENDPOINT_URL_S3",
-        "--network",
-        "host",
-        "--name",
-        "tigris-mcp-server-claude-for-desktop", // tigris-mcp-server-cursor for Cursor AI
         "-i",
         "--rm",
         "--mount",
@@ -178,10 +174,6 @@ or via docker
         "AWS_PROFILE",
         "-e",
         "AWS_ENDPOINT_URL_S3",
-        "--network",
-        "host",
-        "--name",
-        "tigris-mcp-server-claude-for-desktop", // tigris-mcp-server-cursor for Cursor AI
         "-i",
         "--rm",
         "--mount",
