@@ -12,7 +12,8 @@ permissions:
   pull-requests: write
 
 env:
-  IMAGE_NAME: quay.io/tigrisdata/tigris-mcp-server
+  QUAY_IMAGE_NAME: quay.io/tigrisdata/tigris-mcp-server
+  DOCKER_IMAGE_NAME: tigrisdata/tigris-mcp-server
 
 jobs:
   release:
@@ -27,7 +28,7 @@ jobs:
       # Set up Node.js
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: '22'
 
       # Install dependencies and build Node.js project
       - run: npm ci
@@ -73,7 +74,14 @@ jobs:
           username: ${{ secrets.QUAY_REGISTRY_USER }}
           password: ${{ secrets.QUAY_REGISTRY_PASSWORD }}
 
-      # Build and push multi-arch Docker image
+      # Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.GH_DOCKER_ACCESS_USER }}
+          password: ${{ secrets.GH_DOCKER_ACCESS_TOKEN }}
+
+      # Build and push multi-arch Docker image to both registries
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
@@ -81,6 +89,8 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
-            ${{ env.IMAGE_NAME }}:latest
-            ${{ env.IMAGE_NAME }}:${{ env.TAG }}
+            ${{ env.QUAY_IMAGE_NAME }}:latest
+            ${{ env.QUAY_IMAGE_NAME }}:${{ env.TAG }}
+            ${{ env.DOCKER_IMAGE_NAME }}:latest
+            ${{ env.DOCKER_IMAGE_NAME }}:${{ env.TAG }}
           provenance: false
