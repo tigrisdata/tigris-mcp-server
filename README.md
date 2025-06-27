@@ -46,7 +46,7 @@ We support installing the Tigris MCP server two ways:
 1. [🐳 Docker](https://www.docker.com/)
 1. [📦 NPX](https://docs.npmjs.com/cli/v8/commands/npx)
 
-We ]suggest installing and using the MCP server with Docker](https://www.tigrisdata.com/blog/mcp-server/#trust) as it provides much better sandboxing than NPX.
+We [suggest installing and using the MCP server with Docker](https://www.tigrisdata.com/blog/mcp-server/#trust) as it provides much better sandboxing than NPX.
 
 - Running the Tigris MCP server with `docker` requires the Docker Engine to be installed. If you don't have it installed, follow the instructions [here](https://docs.docker.com/engine/install/).
 - Running the Tigris MCP server with `npx` requires Node.js to be installed. If you don't have it installed, follow the instructions [here](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
