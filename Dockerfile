@@ -1,23 +1,16 @@
-FROM node:20-alpine
-
-# Set working directory
-WORKDIR /mcp-server
-
-# Copy package.json and package-lock.json
+# Stage 1: Build
+FROM node:22-alpine AS builder
+WORKDIR /app
 COPY package*.json ./
 COPY tsconfig.json ./
-
-# Install dependencies
-RUN npm ci --only=production
-
-# Copy only the necessary files
+RUN --mount=type=cache,target=/root/.npm npm install
 COPY src ./src
-COPY node_modules ./node_modules
-
-# Build the TypeScript project
 RUN npm run build
 
-RUN rm -rf ./src
-
-# Set the command to run your application
+# Stage 2: Production
+FROM node:22-alpine AS production
+WORKDIR /app
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/dist ./dist
+RUN npm ci --omit=dev --ignore-scripts
 CMD ["node", "dist/index.js", "run"]
