@@ -7,7 +7,11 @@ import { main } from './main.js';
 const [cmd, tool, args] = process.argv.slice(2);
 
 if (cmd === 'run') {
-  await main();
+  main().catch((error) => {
+    // eslint-disable-next-line no-console
+    console.error(error);
+    process.exit(1);
+  });
 } else if (cmd === 'init') {
   await init();
 } else if (cmd === 'debug') {
