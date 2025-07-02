@@ -41,7 +41,7 @@
     "@aws-sdk/client-s3": "^3.777.0",
     "@aws-sdk/credential-providers": "^3.778.0",
     "@aws-sdk/s3-request-presigner": "^3.782.0",
-    "@modelcontextprotocol/sdk": "^1.8.0",
+    "@modelcontextprotocol/sdk": "^1.13.3",
     "inquirer": "^12.5.0"
   },
   "devDependencies": {
