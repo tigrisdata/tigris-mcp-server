@@ -12,6 +12,8 @@ if (cmd === 'run') {
     console.error(error);
     process.exit(1);
   });
+} else if (cmd === 'setup') {
+  await init(false, tool);
 } else if (cmd === 'init') {
   await init();
 } else if (cmd === 'debug') {

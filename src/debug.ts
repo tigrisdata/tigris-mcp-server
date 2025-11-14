@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import { BUCKET_TOOLS_HANDLER } from './tools/buckets.js';
 import { OBJECT_TOOLS_HANDLER } from './tools/objects.js';
+import { parseArgs } from './utils/parse-args.js';
 import { ToolRequest } from './utils/types.js';
 
 const AVAILABLE_TOOLS_HANDLERS = {
@@ -13,7 +14,7 @@ export async function debug(toolName: string, args: string) {
   const request: ToolRequest = {
     params: {
       name: toolName,
-      arguments: parseQueryString(args),
+      arguments: parseArgs(args),
     },
     method: 'tools/call',
   };
@@ -30,17 +31,4 @@ export async function debug(toolName: string, args: string) {
     console.error(`Error executing tool ${toolName}:`, error);
   }
   console.log(`Tool ${toolName} debug completed.`);
-}
-
-function parseQueryString(query: string = ''): Record<string, string> {
-  return query.split('&').reduce(
-    (acc, pair) => {
-      const [key, value] = pair.split('=');
-      if (key) {
-        acc[key] = value || '';
-      }
-      return acc;
-    },
-    {} as Record<string, string>,
-  );
 }
