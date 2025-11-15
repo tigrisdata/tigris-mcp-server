@@ -4,7 +4,7 @@ import fs from 'fs';
 import inquirer from 'inquirer';
 import os from 'os';
 import path from 'path';
-import {
+import type {
   MCP_SERVER_CONFIG_FILE,
   MCP_SERVER_REMOTE_CONFIG,
   MCP_SERVER_STDIO_CONFIG,
@@ -61,7 +61,7 @@ const applicationConfigMap = {
 
 const supportedModes = ['npx', 'docker'];
 const tigrisMcpServerImage = 'quay.io/tigrisdata/tigris-mcp-server:latest';
-const supportedTransports = ['remote', 'stdio'];
+const supportedTransports = ['http', 'stdio'];
 
 export async function init(
   askForTransport: boolean = true,
@@ -84,7 +84,8 @@ export async function init(
     ]);
     selectedApplication = application;
   }
-  let transport = 'remote';
+
+  let transport = 'http';
   let config: MCP_SERVER_STDIO_CONFIG | MCP_SERVER_REMOTE_CONFIG = {};
 
   if (askForTransport) {
@@ -229,9 +230,9 @@ export async function init(
     };
   }
 
-  if (selectedApplication === 'Claude for Desktop' && transport === 'remote') {
+  if (selectedApplication === 'Claude for Desktop' && transport === 'http') {
     console.log(
-      'You can add the Tigris MCP Server to Claude for Desktop by using Connectors, please refer to the following link: https://mcp.storage.dev/mcp',
+      'You can add the Tigris MCP Server to Claude for Desktop by using Connectors, please refer to the following link: https://mcp.storage.dev',
     );
     return;
   }
@@ -245,6 +246,7 @@ export async function init(
 
   if (fs.existsSync(filePath)) {
     try {
+      fs.copyFileSync(filePath, `${filePath}.bak`);
       existingConfig = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
     } catch (error) {
       console.warn(
