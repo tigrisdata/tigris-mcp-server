@@ -119,11 +119,18 @@ export async function init(
       },
     ]);
 
-    const command = mode === supportedModes[0] ? 'npx' : 'docker';
-    const args =
-      mode === supportedModes[0]
-        ? ['-y', '@tigrisdata/tigris-mcp-server', 'run'] // npx command
-        : ['run']; // docker command
+    let command: string | null = null;
+    let args: string[] | null = null;
+    
+    if (mode === 'npx') {
+        command = 'npx';
+        args = ['-y', '@tigrisdata/tigris-mcp-server', 'run'];
+    } else if (mode === 'npx') {
+        command = 'docker';
+        args = ['run'];
+    } else {
+        throw new Error(`Unsupported execution mode ${mode}, wanted one of ${supportedModes}`);
+    }
 
     let env: Record<string, string> = {};
 
