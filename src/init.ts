@@ -126,7 +126,7 @@ export async function init(
     if (mode === 'npx') {
         command = 'npx';
         args = ['-y', '@tigrisdata/tigris-mcp-server', 'run'];
-    } else if (mode === 'npx') {
+    } else if (mode === 'docker') {
         command = 'docker';
         args = ['run'];
     } else {
