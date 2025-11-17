@@ -1,5 +1,8 @@
 # 🦁 Tigris MCP Server
 
+> [!IMPORTANT]
+> Tigris has a hosted MCP server with OAuth support. Read more about it on [mcp.storage.dev](https://mcp.storage.dev).
+
 Tigris is a high-performance, S3-compatible object storage system designed for multi-cloud and AI workloads. We move your data all around the world based on where it's needed so that downloads are fast and the data is close to your users. You can store anything you want on Tigris (AI models, training data, database backups, request logs, social media uploads, or anything else) with no egress fees.
 
 The **Tigris MCP Server** implements the [MCP specification](https://modelcontextprotocol.io/) to create a seamless connection between AI agents and Tigris key features like bucket and object management.

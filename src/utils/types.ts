@@ -11,7 +11,15 @@ export type ToolHandlers = Record<
   (request: ToolRequest) => Promise<Result>
 >;
 
-export type MCP_SERVER_CONFIG = Record<
+export type MCP_SERVER_REMOTE_CONFIG = Record<
+  string,
+  {
+    type: 'http';
+    url: string;
+  }
+>;
+
+export type MCP_SERVER_STDIO_CONFIG = Record<
   string,
   {
     command: string;
@@ -20,4 +28,7 @@ export type MCP_SERVER_CONFIG = Record<
   }
 >;
 
-export type MCP_SERVER_CONFIG_FILE = Record<string, MCP_SERVER_CONFIG>;
+export type MCP_SERVER_CONFIG_FILE = Record<
+  string,
+  MCP_SERVER_REMOTE_CONFIG | MCP_SERVER_STDIO_CONFIG
+>;
