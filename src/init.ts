@@ -170,7 +170,7 @@ export async function init(
         type: 'input',
         name: 'awsEndpointUrl',
         message: 'Enter Tigris Endpoint:',
-        default: 'https://t3.storage.dev',
+        default: 'https://t3.storageapi.dev',
       },
     ]);
     env.AWS_ENDPOINT_URL_S3 = awsEndpointUrl;
@@ -225,14 +225,14 @@ export async function init(
     config = {
       tigris: {
         type: 'http',
-        url: 'https://mcp.storage.dev/mcp',
+        url: 'https://mcp.storageapi.dev/mcp',
       },
     };
   }
 
   if (selectedApplication === 'Claude for Desktop' && transport === 'http') {
     console.log(
-      'You can add the Tigris MCP Server to Claude for Desktop by using Connectors, please refer to the following link: https://mcp.storage.dev',
+      'You can add the Tigris MCP Server to Claude for Desktop by using Connectors, please refer to the following link: https://mcp.storageapi.dev',
     );
     return;
   }
