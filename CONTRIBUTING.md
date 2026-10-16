@@ -10,7 +10,7 @@ This guide explains how to set up, develop, and debug the **Tigris MCP Server** 
 
 Before starting, ensure you have the following installed on your system:
 
-- **Node.js** (v20 or higher)
+- **Node.js** (v22.11 or higher; v24 recommended, which is what CI uses and what `.nvmrc` pins)
 - **npm** (comes with Node.js)
 - **Docker** (for containerized development)
 - **Git** (for version control)
