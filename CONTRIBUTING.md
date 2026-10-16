@@ -56,7 +56,7 @@ The compiled files will be located in the `dist` directory.
   npm run lint
   ```
 
-- **Formatting**: Use Prettier to format the code:
+- **Formatting**: Use Biome to format the code (`npm run lint:fix` also applies safe lint fixes):
 
   ```bash
   npm run format
@@ -120,7 +120,10 @@ You can configure these in a `.env` file for local development.
 ## Additional Notes
 
 - **Dockerized Development**: The `init` command in the project can generate Docker configurations for tools like **Claude for Desktop** and **Cursor AI**.
-- **Semantic Release**: The project uses `semantic-release` for automated versioning and publishing.
+- **Releases**: The project uses [changesets](https://github.com/changesets/changesets) for versioning and publishing.
+  - If your change should ship in a release, run `npx changeset` in your branch, pick the bump type (patch/minor/major) and write a short note. Commit the generated `.changeset/*.md` file with your PR.
+  - When PRs with changesets land on `main`, CI opens a "Version Packages" PR that bumps `package.json` and updates `CHANGELOG.md`.
+  - Merging that PR publishes to npm via [trusted publishing](https://docs.npmjs.com/trusted-publishers) (OIDC, no npm token), creates the `vX.Y.Z` tag and GitHub release, and pushes the Docker images.
 
 For more details, refer to the [README.md](README.md) file.
 

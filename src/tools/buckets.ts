@@ -3,9 +3,9 @@ import {
   DeleteBucketCommand,
   paginateListBuckets,
 } from '@aws-sdk/client-s3';
-import { Tool } from '@modelcontextprotocol/sdk/types.js';
+import type { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { createS3Client } from '../utils/create-s3-client.js';
-import { ToolHandlers } from '../utils/types.js';
+import type { ToolHandlers } from '../utils/types.js';
 
 const TIGRIS_LIST_BUCKETS_TOOL: Tool = {
   name: 'tigris_list_buckets',

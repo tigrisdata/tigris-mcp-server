@@ -1,6 +1,6 @@
 {
   "name": "@tigrisdata/tigris-mcp-server",
-  "version": "0.0.0-development",
+  "version": "1.14.0",
   "description": "MCP server for Tigris Data.",
   "main": "dist/index.js",
   "type": "module",
@@ -23,19 +23,21 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "CHANGELOG.md"
   ],
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "tsc && shx chmod +x dist/*.js",
+    "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "ts-node src/index.ts",
-    "lint": "eslint ./src --ext .ts,.cjs",
-    "format": "prettier --write 'src/**/*.{ts,tsx,json,md}'",
-    "test": "jest",
-    "semantic-release": "semantic-release"
+    "dev": "tsx src/index.ts",
+    "lint": "biome check src",
+    "format": "biome format --write src",
+    "changeset": "changeset",
+    "release": "changeset publish",
+    "lint:fix": "biome check --write src"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.777.0",
@@ -45,19 +47,10 @@
     "inquirer": "^12.5.0"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.14",
-    "@types/mime-types": "^2.1.4",
+    "@biomejs/biome": "2.5.15",
+    "@changesets/cli": "^3.0.3",
     "@types/node": "^22.13.14",
-    "@typescript-eslint/eslint-plugin": "^8.28.0",
-    "@typescript-eslint/parser": "^8.28.0",
-    "eslint": "^9.23.0",
-    "eslint-config-prettier": "^10.1.1",
-    "eslint-plugin-prettier": "^5.2.5",
-    "jest": "^29.7.0",
-    "prettier": "^3.5.3",
-    "semantic-release": "^24.2.3",
-    "shx": "^0.4.0",
-    "ts-node": "^10.9.2",
+    "tsx": "^4.23.15",
     "typescript": "^5.8.2"
   }
 }

@@ -1,9 +1,8 @@
-/* eslint-disable no-console */
-import { spawnSync } from 'child_process';
-import fs from 'fs';
+import { spawnSync } from 'node:child_process';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import inquirer from 'inquirer';
-import os from 'os';
-import path from 'path';
 import type {
   MCP_SERVER_CONFIG_FILE,
   MCP_SERVER_REMOTE_CONFIG,
@@ -122,18 +121,20 @@ export async function init(
 
     let command: string | null = null;
     let args: string[] | null = null;
-    
+
     if (mode === 'npx') {
-        command = 'npx';
-        args = ['-y', '@tigrisdata/tigris-mcp-server', 'run'];
+      command = 'npx';
+      args = ['-y', '@tigrisdata/tigris-mcp-server', 'run'];
     } else if (mode === 'docker') {
-        command = 'docker';
-        args = ['run'];
+      command = 'docker';
+      args = ['run'];
     } else {
-        throw new Error(`Unsupported execution mode ${mode}, wanted one of ${supportedModes}`);
+      throw new Error(
+        `Unsupported execution mode ${mode}, wanted one of ${supportedModes}`,
+      );
     }
 
-    let env: Record<string, string> = {};
+    const env: Record<string, string> = {};
 
     if (useAwsProfiles) {
       const { awsProfile } = await inquirer.prompt([
