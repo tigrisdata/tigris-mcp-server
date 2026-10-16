@@ -4,86 +4,110 @@ on:
   push:
     branches:
       - main
-      - next
 
-permissions:
-  contents: write
-  issues: write
-  pull-requests: write
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 env:
   QUAY_IMAGE_NAME: quay.io/tigrisdata/tigris-mcp-server
   DOCKER_IMAGE_NAME: tigrisdata/tigris-mcp-server
 
 jobs:
-  release:
+  # Decide what this push needs:
+  #   version -> pending changesets: open or update the "Version Packages" PR
+  #   publish -> Version PR was merged: publish, tag, release, build images
+  #   none    -> nothing to do
+  select-mode:
     runs-on: ubuntu-latest
-
+    permissions: {}
+    outputs:
+      mode: ${{ steps.select.outputs.mode }}
     steps:
-      # Checkout code with full history to get tags
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
-          fetch-depth: 0
-
-      # Set up Node.js
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
-      # Install dependencies and build Node.js project
+          node-version: '24'
       - run: npm ci
-      - run: npm run build
+      - id: select
+        uses: changesets/action/select-mode@v2
+
+  version:
+    needs: select-mode
+    if: needs.select-mode.outputs.mode == 'version'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # commit the version bump
+      pull-requests: write # open or update the Version Packages PR
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+      - run: npm ci
+      - uses: changesets/action/version@v2
+
+  publish:
+    needs: select-mode
+    if: needs.select-mode.outputs.mode == 'publish'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # push the vX.Y.Z tag and create the GitHub release
+      id-token: write # npm trusted publishing (OIDC); no NPM_TOKEN secret involved
+    outputs:
+      published: ${{ steps.publish.outputs.published }}
+      version: ${{ steps.meta.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          # Node 24 bundles npm 11.x; trusted publishing needs npm >= 11.5.1.
+          node-version: '24'
+          package-manager-cache: false
+      - run: npm ci
       - run: npm audit signatures
+      - run: npm run build
+      - id: publish
+        uses: changesets/action/publish@v2
+        with:
+          script: npm run release
+          create-github-releases: true
+      - id: meta
+        run: echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
 
-      # Release to GitHub and NPM
-      - name: Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm run semantic-release
+  docker:
+    needs: publish
+    if: needs.publish.outputs.published == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      TAG: v${{ needs.publish.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
 
-      # Get latest git tag (if exists)
-      - name: Get git tag
-        id: get_tag
-        run: |
-          TAG=$(git describe --tags --abbrev=0 || echo "no-tag")
-          echo "TAG=$TAG" >> $GITHUB_ENV
-
-      # Set up QEMU for multi-arch builds
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
 
-      # Set up Docker Buildx
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
         with:
           install: true
           driver-opts: network=host
 
-      # Create and bootstrap Buildx builder
-      - name: Create builder
-        run: |
-          docker buildx create --name mybuilder --use
-          docker buildx inspect --bootstrap
-
-      # Log in to Quay.io
       - name: Log in to Quay.io
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: quay.io
           username: ${{ secrets.QUAY_REGISTRY_USER }}
           password: ${{ secrets.QUAY_REGISTRY_PASSWORD }}
 
-      # Log in to Docker Hub
       - name: Log in to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.GH_DOCKER_ACCESS_USER }}
           password: ${{ secrets.GH_DOCKER_ACCESS_TOKEN }}
 
-      # Build and push multi-arch Docker image to both registries
       - name: Build and push Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: .
           push: true

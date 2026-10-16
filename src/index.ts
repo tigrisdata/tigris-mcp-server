@@ -7,7 +7,6 @@ const [cmd, args] = process.argv.slice(2);
 
 if (cmd === 'run') {
   main().catch((error) => {
-    // eslint-disable-next-line no-console
     console.error(error);
     process.exit(1);
   });

@@ -1,14 +1,14 @@
+import { readFile } from 'node:fs/promises';
 import {
   DeleteObjectCommand,
   GetObjectCommand,
-  paginateListObjectsV2,
   PutObjectCommand,
+  paginateListObjectsV2,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { Tool } from '@modelcontextprotocol/sdk/types.js';
-import { readFile } from 'node:fs/promises';
+import type { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { createS3Client } from '../utils/create-s3-client.js';
-import { ToolHandlers } from '../utils/types.js';
+import type { ToolHandlers } from '../utils/types.js';
 
 const TIGRIS_LIST_OBJECTS_TOOL: Tool = {
   name: 'tigris_list_objects',
@@ -363,9 +363,11 @@ const getObject = async (bucketName: string, fileName: string) => {
   });
 
   const response = await S3.send(command);
-  const arrayBuffer = await response.Body?.transformToByteArray();
-  const buffer = Buffer.from(arrayBuffer!);
-  return buffer;
+  if (!response.Body) {
+    throw new Error(`Object ${fileName} in bucket ${bucketName} has no body`);
+  }
+  const arrayBuffer = await response.Body.transformToByteArray();
+  return Buffer.from(arrayBuffer);
 };
 
 const deleteObject = async (bucketName: string, fileName: string) => {

@@ -1,5 +1,4 @@
-import { S3Client } from '@aws-sdk/client-s3';
-import { GetBucketAclCommand } from '@aws-sdk/client-s3';
+import { GetBucketAclCommand, type S3Client } from '@aws-sdk/client-s3';
 
 export const getBucketAcl = async (S3: S3Client, bucketName: string) => {
   return S3.send(new GetBucketAclCommand({ Bucket: bucketName }));
