@@ -44,7 +44,7 @@
     "@aws-sdk/credential-providers": "^3.778.0",
     "@aws-sdk/s3-request-presigner": "^3.782.0",
     "@modelcontextprotocol/sdk": "^1.32.1",
-    "inquirer": "^12.5.0"
+    "inquirer": "^14.0.0"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.15",
